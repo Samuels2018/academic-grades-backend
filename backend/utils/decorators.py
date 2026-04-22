@@ -1,5 +1,7 @@
 from functools import wraps
+
 from .error_handler import APIError
+
 
 def require_role(allowed_roles):
     """Decorador para vistas que exige un rol específico."""

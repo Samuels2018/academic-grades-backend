@@ -1,8 +1,11 @@
-from django.test import TestCase, Client
-from django.urls import reverse
-from users.models import User
-from courses.models import Course, Enrollment
 import json
+
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from courses.models import Course, Enrollment
+from users.models import User
+
 
 class CourseAPITests(TestCase):
     def setUp(self):

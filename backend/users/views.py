@@ -1,10 +1,11 @@
 import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 
-from utils.error_handler import handle_api_errors, APIError
+from utils.error_handler import APIError, handle_api_errors
 
 
 @ensure_csrf_cookie

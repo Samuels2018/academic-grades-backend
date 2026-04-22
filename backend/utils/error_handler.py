@@ -1,7 +1,7 @@
-from functools import wraps
-from django.http import JsonResponse
-from django.http import Http404
 import logging
+from functools import wraps
+
+from django.http import Http404, JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def handle_api_errors(view_func):
             message = str(e) if str(e) else "Recurso no encontrado"
             logger.warning(f"Http404: {message}")
             return JsonResponse({"error": message}, status=404)
-        except Exception as e:
+        except Exception:
             logger.exception("Unhandled exception")
             return JsonResponse({"error": "Error interno del servidor"}, status=500)
     return wrapper

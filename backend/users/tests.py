@@ -1,7 +1,10 @@
-from django.test import TestCase, Client
-from django.urls import reverse
-from users.models import User
 import json
+
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from users.models import User
+
 
 class UserAuthTests(TestCase):
     def setUp(self):

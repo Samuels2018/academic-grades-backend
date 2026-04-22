@@ -1,13 +1,15 @@
 import json
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 
-from utils.error_handler import handle_api_errors, APIError
-from utils.decorators import require_role
-from .models import Course, Enrollment
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_http_methods
+
 from users.models import User
+from utils.decorators import require_role
+from utils.error_handler import APIError, handle_api_errors
+
+from .models import Course, Enrollment
 
 
 @login_required
