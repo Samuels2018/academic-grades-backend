@@ -20,15 +20,20 @@ services:
   backend:
     build: ./backend
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "uv run python manage.py migrate &&
+             uv run python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app
+      - backend_venv:/app/.venv
     ports:
       - "8000:8000"
     environment:
       - DEBUG=1
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/gradesdb
+      - DB_NAME=gradesdb
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
       - SECRET_KEY=dev-secret-key-change-in-prod
     depends_on:
       db:
@@ -36,16 +41,18 @@ services:
 
   frontend:
     build: ./frontend
-    command: npm run dev
+    command: npm start
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
       - "3000:3000"
     environment:
-      - VITE_API_URL=http://localhost:8000/api
+      - HOST=0.0.0.0
+      - REACT_APP_API_URL=http://localhost:8000/api
     depends_on:
       - backend
 
 volumes:
   postgres_data:
+  backend_venv:
