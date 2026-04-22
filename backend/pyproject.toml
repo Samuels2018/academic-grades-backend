@@ -1,0 +1,42 @@
+[project]
+name = "academic-grades-backend"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "Django==5.0.6",
+    "django-cors-headers==4.9.0",
+    "psycopg2-binary==2.9.9",
+    "python-decouple==3.8",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.10.0",
+    "django-stubs>=5.0.0",
+    "pytest==8.2.0",
+    "pytest-django==4.8.0",
+    "ruff==0.4.5",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+plugins = ["mypy_django_plugin.plugin"]
+
+[tool.django-stubs]
+django_settings_module = "core_api.settings"
