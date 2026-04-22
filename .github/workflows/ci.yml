@@ -29,7 +29,7 @@ jobs:
       - name: Install backend dependencies
         run: uv sync --dev
 
-      - name: Run backend linter (ruff)
+      - name: Run backend linter
         run: uv run ruff check .
 
       - name: Run backend tests
@@ -56,7 +56,7 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Run frontend linter (eslint)
+      - name: Run frontend linter
         run: npm run lint
 
       - name: Run frontend tests

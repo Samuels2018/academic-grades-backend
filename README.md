@@ -1,70 +1,220 @@
-# Getting Started with Create React App
+# Full Application Example
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Proyecto full stack con:
 
-## Available Scripts
+1. Backend Django
+2. Frontend React (CRA + TypeScript)
+3. PostgreSQL
+4. Orquestación con Docker Compose
 
-In the project directory, you can run:
+## Requisitos
 
-### `npm start`
+1. Docker
+2. Docker Compose (plugin `docker compose`)
+3. Make (opcional, para atajos)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Levantar el proyecto con Docker Compose
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Opción 1: usando Makefile (recomendado)
 
-### `npm test`
+```bash
+make build
+make up
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Servicios disponibles:
 
-### `npm run build`
+1. Frontend: http://localhost:3000
+2. Backend API: http://localhost:8000/api
+3. PostgreSQL: localhost:5432
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Endpoints del Frontend y Backend
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Frontend (rutas de la app)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Base URL frontend: `http://localhost:3000`
 
-### `npm run eject`
+1. `GET /login` - pantalla de inicio de sesión
+2. `GET /dashboard` - panel principal (protegido)
+3. `GET /courses` - gestión/listado de cursos (protegido)
+4. `GET /grades` - gestión/listado de notas (protegido)
+5. `GET /admin` - panel de administración (solo rol admin)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend (API)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Base URL backend: `http://localhost:8000/api`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Auth (`/api/auth`):
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. `POST /auth/login/` - iniciar sesión
+2. `POST /auth/logout/` - cerrar sesión
+3. `GET /auth/me/` - usuario autenticado actual
+4. `GET /auth/users/?role=student|teacher|admin` - listar usuarios por rol
 
-## Learn More
+Courses (`/api/courses`):
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. `GET /courses/` - listar cursos según permisos
+2. `POST /courses/` - crear curso (admin)
+3. `GET /courses/<course_id>/` - detalle de curso
+4. `PUT /courses/<course_id>/` - actualizar curso (admin/profesor asignado)
+5. `DELETE /courses/<course_id>/` - eliminar curso (admin/profesor asignado)
+6. `POST /courses/<course_id>/enroll/` - matricular alumno en curso
+7. `GET /courses/my-courses/` - cursos del usuario actual
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Grades (`/api/grades`):
 
-### Code Splitting
+1. `GET /grades/` - listar notas según rol
+2. `POST /grades/` - crear/actualizar nota de alumno en curso
+3. `GET /grades/<grade_id>/` - detalle de nota
+4. `PUT /grades/<grade_id>/` - actualizar nota
+5. `DELETE /grades/<grade_id>/` - eliminar nota
+6. `GET /grades/course/<course_id>/` - notas por curso
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Opción 2: usando Docker Compose directamente
 
-### Analyzing the Bundle Size
+```bash
+docker compose build
+docker compose up
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Para correr en segundo plano:
 
-### Making a Progressive Web App
+```bash
+docker compose up -d
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Comandos útiles del Makefile
 
-### Advanced Configuration
+```bash
+make help
+make build
+make up
+make down
+make logs
+make backend-shell
+make frontend-shell
+make test
+make lint
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Qué hace cada comando:
 
-### Deployment
+1. `make build`: construye imágenes
+2. `make up`: levanta servicios
+3. `make down`: detiene y elimina contenedores
+4. `make logs`: muestra logs en tiempo real
+5. `make backend-shell`: abre shell en backend
+6. `make frontend-shell`: abre shell en frontend
+7. `make test`: ejecuta tests del backend
+8. `make lint`: ejecuta Ruff en backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Flujo recomendado de desarrollo
 
-### `npm run build` fails to minify
+1. Construir y levantar:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+make build
+make up
+```
+
+2. Ver logs si algo falla:
+
+```bash
+make logs
+```
+
+3. Ejecutar validaciones:
+
+```bash
+make lint
+make test
+```
+
+4. Apagar servicios:
+
+```bash
+make down
+```
+
+## Levantar el proyecto sin Docker
+
+### 1) Backend (Django + uv)
+
+Desde la carpeta `backend`:
+
+```bash
+cd backend
+uv sync --dev
+```
+
+Configura variables de entorno (por ejemplo en un archivo `.env` dentro de `backend/`):
+
+```env
+DEBUG=True
+DB_NAME=gradesdb
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+Ejecuta migraciones y levanta el servidor:
+
+```bash
+uv run python manage.py migrate
+uv run python manage.py runserver 0.0.0.0:8000
+```
+
+### 2) Base de datos PostgreSQL
+
+Puedes usar PostgreSQL local ya instalado o levantar solo la base con Docker:
+
+```bash
+docker compose up -d db
+```
+
+### 3) Frontend (React)
+
+Desde la carpeta `frontend`:
+
+```bash
+cd frontend
+npm install
+```
+
+Configura la URL del backend (archivo `.env` en `frontend/`):
+
+```env
+REACT_APP_API_URL=http://localhost:8000/api
+```
+
+Levanta el frontend:
+
+```bash
+npm start
+```
+
+### 4) Validaciones locales
+
+Backend:
+
+```bash
+cd backend
+uv run ruff check .
+uv run python manage.py test
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm run lint
+CI=true npm run test:ci
+```
+
+## Notas de configuración actual
+
+1. El backend en Docker usa `uv` para ejecutar migraciones y servidor.
+2. El frontend usa `npm start` (Create React App).
+3. La variable del frontend para API es `REACT_APP_API_URL`.
+4. La base de datos en Docker se conecta por `DB_HOST=db`.
