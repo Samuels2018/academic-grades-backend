@@ -151,11 +151,11 @@ Configura variables de entorno (por ejemplo en un archivo `.env` dentro de `back
 
 ```env
 DEBUG=True
-DB_NAME=gradesdb
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=5432
+DB_NAME=gradesdb
+DB_USER=your_user
+DB_PASSWORD=your_db_pass
 ```
 
 Ejecuta migraciones y levanta el servidor:
@@ -218,3 +218,25 @@ CI=true npm run test:ci
 2. El frontend usa `npm start` (Create React App).
 3. La variable del frontend para API es `REACT_APP_API_URL`.
 4. La base de datos en Docker se conecta por `DB_HOST=db`.
+
+## Variables de entorno del backend
+
+Si levantas todo con `docker compose`, usa:
+
+```env
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=gradesdb
+DB_USER=postgres
+DB_PASSWORD=postgres
+```
+
+Si ejecutas el backend sin Docker (PostgreSQL local), usa:
+
+```env
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_NAME=gradesdb
+DB_USER=your_user
+DB_PASSWORD=your_db_pass
+```
